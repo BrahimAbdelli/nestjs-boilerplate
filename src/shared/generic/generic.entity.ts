@@ -4,43 +4,43 @@ import { Exclude, Expose, Transform } from 'class-transformer';
 import { transformEntity } from '../transform-entity.utlis';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BaseEntity {
+export abstract class BaseEntity {
   @ApiProperty()
   @ObjectIdColumn()
   @Transform(transformEntity)
   @Expose()
-  _id?: ObjectID;
+  private _id?: ObjectID;
 
   @Column()
   @Expose()
-  isDeleted: boolean;
+  private isDeleted: boolean;
 
   @Column()
   @Transform(transformEntity)
-  userCreated: ObjectID | IUser;
+  private userCreated: ObjectID | IUser;
 
   @Column()
   @Expose()
-  createdAt: Date;
+  protected createdAt: Date;
 
   @Column()
   @Transform(transformEntity)
-  userUpdated: ObjectID | IUser;
+  private userUpdated: ObjectID | IUser;
 
   @Column()
   @Expose()
-  lastUpdateAt: Date;
+  protected lastUpdateAt: Date;
 
   /**************** ACTIONS ****************/
 
   @BeforeInsert()
   @BeforeUpdate()
-  private beforeActions() {
+  protected beforeActions() {
     this.lastUpdateAt = new Date();
   }
 
   @BeforeInsert()
-  private beforeInsertActions() {
+  protected beforeInsertActions() {
     this.createdAt = new Date();
   }
 }

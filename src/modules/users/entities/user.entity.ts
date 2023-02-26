@@ -8,20 +8,6 @@ import * as crypto from 'crypto';
 
 @Entity('users')
 export class User extends BaseEntity {
-  @Column({ length: 50 })
-  readonly name: string;
-
-  @Column({ length: 50 })
-  readonly age: number;
-
-  @Column({ length: 50 })
-  readonly favouriteColor: string;
-
-  @Expose()
-  @ObjectIdColumn()
-  @Transform(transformEntity)
-  _id: ObjectID;
-
   @Column()
   @Expose()
   email: string;
@@ -63,24 +49,6 @@ export class User extends BaseEntity {
 
   @Column()
   @Expose()
-  isDeleted: boolean;
-
-  @Expose()
-  @Column()
-  @Transform(transformEntity)
-  userCreated: ObjectID | IUser;
-
-  @Expose()
-  @Column()
-  @Transform(transformEntity)
-  userUpdated: ObjectID | IUser;
-
-  @Expose()
-  @Column()
-  createdAt: Date;
-
-  @Expose()
-  @Column()
   lastUpdateAt: Date;
 
   tempPassword?: string;
@@ -90,9 +58,9 @@ export class User extends BaseEntity {
     this.tempPassword = this.password;
   }
 
-  /*   @BeforeInsert()
+  @BeforeInsert()
   @BeforeUpdate()
-  private beforeActions() {
+  protected beforeActions() {
     if (this.tempPassword !== this.password) {
       this.password = crypto.createHmac('sha256', this.password).digest('hex');
     }
@@ -102,10 +70,10 @@ export class User extends BaseEntity {
   }
 
   @BeforeInsert()
-  private beforeInsertActions() {
+  protected beforeInsertActions() {
     this.status = true;
     this.createdAt = new Date();
-  } */
+  }
 
   constructor(o: Object) {
     super();

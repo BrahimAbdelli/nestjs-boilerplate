@@ -9,11 +9,11 @@ export abstract class BaseEntity {
   @ObjectIdColumn()
   @Transform(transformEntity)
   @Expose()
-  private _id?: ObjectID;
+  public _id?: ObjectID;
 
   @Column()
   @Expose()
-  private isDeleted: boolean;
+  public isDeleted: boolean;
 
   @Column()
   @Transform(transformEntity)

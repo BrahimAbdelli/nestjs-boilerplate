@@ -1,3 +1,3 @@
-import { CreateGenericDTO } from '../../../shared/generic/dtos/create-generic.dto';
+import { BaseCreateDto } from './../../../shared/base/dtos/create-base.dto';
 
-export class CreateUserDTO extends CreateGenericDTO {}
+export class UserCreateDto extends BaseCreateDto {}

@@ -2,9 +2,9 @@ import { IUser } from './../interface/user.interface';
 import { ObjectID } from 'mongodb';
 import { Expose, Transform } from 'class-transformer';
 import { Entity, Column, ObjectIdColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
-import { BaseEntity } from '../../../shared/generic/generic.entity';
 import { transformEntity } from '../../../shared/transform-entity.utlis';
 import * as crypto from 'crypto';
+import { BaseEntity } from '../../../shared/base/base.entity';
 
 @Entity('users')
 export class User extends BaseEntity {

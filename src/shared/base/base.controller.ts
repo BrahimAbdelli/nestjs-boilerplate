@@ -9,7 +9,7 @@ import { IBaseService } from './IBase.service';
 import { BaseUpdateDto } from './dtos/update-base.dto';
 
 export abstract class BaseController<T extends BaseEntity, U extends BaseCreateDto, V extends BaseUpdateDto> {
-  constructor(private readonly service: BaseService<T>, protected readonly userId: string) {}
+  constructor(private readonly service: BaseService<T>) {}
 
   @Get()
   async findAll(): Promise<T[]> {

@@ -1,5 +1,6 @@
 import { ObjectID } from 'mongodb';
 import { DeepPartial } from 'typeorm';
+
 export interface IBaseService<T> {
   findAll(): Promise<T[]>;
   findById(_id: ObjectID): Promise<T>;

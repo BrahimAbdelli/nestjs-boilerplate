@@ -9,7 +9,7 @@ export abstract class BaseEntity {
   @ObjectIdColumn()
   @Transform(transformEntity)
   @Expose()
-  public _id?: ObjectID;
+  public _id: ObjectID;
 
   @Column()
   @Expose()
@@ -17,7 +17,7 @@ export abstract class BaseEntity {
 
   @Column()
   @Transform(transformEntity)
-  private userCreated: ObjectID | IUser;
+  public userCreated: ObjectID | IUser;
 
   @Column()
   @Expose()
@@ -25,7 +25,7 @@ export abstract class BaseEntity {
 
   @Column()
   @Transform(transformEntity)
-  private userUpdated: ObjectID | IUser;
+  public userUpdated: ObjectID | IUser;
 
   @Column()
   @Expose()

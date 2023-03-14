@@ -1,19 +1,24 @@
 import { IUser } from './../interface/user.interface';
 import { ObjectID } from 'mongodb';
 import { Expose, Transform } from 'class-transformer';
-import { Entity, Column, ObjectIdColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, AfterLoad, BeforeInsert, BeforeUpdate, Index } from 'typeorm';
 import { transformEntity } from '../../../shared/transform-entity.utlis';
 import * as crypto from 'crypto';
 import { BaseEntity } from '../../../shared/base/base.entity';
 
 @Entity('users')
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity {
   @Column()
   @Expose()
   email: string;
 
   @Column()
   password: string;
+
+  @Column()
+  @Expose()
+  @Index({ unique: true })
+  username: string;
 
   @Expose({ groups: ['user'] })
   @Column()

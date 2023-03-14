@@ -2,13 +2,9 @@ import { ObjectID } from 'mongodb';
 
 export interface IUser {
   _id: ObjectID;
+  username: string;
   email: string;
-  // roles: string[];
-  name: string;
-  lastname: string;
-  phone: string;
-  address: string;
-  about: string;
+  roles: string[];
   resetPasswordToken?: string;
   image?: string;
 }

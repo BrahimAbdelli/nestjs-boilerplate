@@ -1,4 +1,4 @@
-import { IUser } from './../../modules/users/interface/user.interface';
+import { IUser } from '../../modules/users/interface/user.interface';
 import { BeforeInsert, BeforeUpdate, Column, ObjectID, ObjectIdColumn } from 'typeorm';
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { transformEntity } from '../transform-entity.utlis';

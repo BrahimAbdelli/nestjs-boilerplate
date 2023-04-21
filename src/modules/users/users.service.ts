@@ -1,7 +1,3 @@
-import { UserUpdateDto } from './dtos/update-user.dto';
-import { UserCreateDto } from './dtos/create-user.dto';
-import { UpdateNewPasswordDto } from './dtos/updateNewPassword-user.dto';
-import { LoginUserDto } from './dtos/login-user.dto';
 import { IGetUserAuthInfoRequest } from './../../shared/user-request.interface';
 import { BaseService } from './../../shared/base/base.service';
 import { Inject, Injectable, Scope } from '@nestjs/common';
@@ -14,14 +10,15 @@ import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import { throwError } from '../../shared/throw-error.utils';
 import { IUser } from './interface/user.interface';
+import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
 
 @Injectable({ scope: Scope.REQUEST })
-export class UserService extends BaseService<UserEntity> {
+export class UserService extends BaseService<UserEntity, UserCreateDto, UserUpdateDto> {
   constructor(
     @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
-    @Inject(REQUEST) private readonly request: IGetUserAuthInfoRequest
+    @Inject(REQUEST) public readonly request: IGetUserAuthInfoRequest
   ) {
-    super(userRepository);
+    super(userRepository, request);
   }
 
   async findAll(): Promise<UserEntity[]> {

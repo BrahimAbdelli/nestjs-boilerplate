@@ -1,9 +1,8 @@
 import { CacheModule, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -22,9 +21,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true
     }),
 
-    UsersModule
+    UsersModule,
+    CategoryModule
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  controllers: [],
+  providers: []
 })
 export class AppModule {}

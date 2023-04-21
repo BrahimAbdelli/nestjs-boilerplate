@@ -1,26 +1,22 @@
-import { ValidateObjectIdPipe } from './../pipes/validateObjectId.pipe';
-import { BaseCreateDto } from './dtos/create-base.dto';
-import { BaseService } from './base.service';
-import { Get, Post, Delete, Put, Body, Param, Patch } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
-import { DeepPartial } from 'typeorm';
+import { Body, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { ObjectID } from 'mongodb';
+import { ValidateObjectIdPipe } from './../pipes/validate-object-id.pipe';
 import { BaseEntity } from './base.entity';
-import { IBaseService } from './IBase.service';
+import { BaseService } from './base.service';
+import { BaseCreateDto } from './dtos/create-base.dto';
 import { BaseUpdateDto } from './dtos/update-base.dto';
 
 export abstract class BaseController<T extends BaseEntity, U extends BaseCreateDto, V extends BaseUpdateDto> {
-  constructor(private readonly service: BaseService<T>) {}
+  constructor(private readonly service: BaseService<T, U, V>) {}
 
   @Get()
   async findAll(): Promise<T[]> {
     return this.service.findAll();
   }
 
-  //@Param('id') id: number
-  // hello write me a console log
   @Get(':id')
-  async findOne(@Param(new ValidateObjectIdPipe(this)) params): Promise<T> {
-    return this.service.findOne(params.id);
+  async findOne(@Param(new ValidateObjectIdPipe('')) params): Promise<T> {
+    return this.service.findOne(new ObjectID(params.id));
   }
 
   @Post()
@@ -29,12 +25,27 @@ export abstract class BaseController<T extends BaseEntity, U extends BaseCreateD
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() dto: V): Promise<T> {
-    return this.service.update(id, dto);
+  async update(@Param(new ValidateObjectIdPipe('')) params, @Body() dto: V): Promise<T> {
+    return this.service.update(new ObjectID(params.id), dto);
+  }
+
+  @Patch(':id')
+  async archive(@Param(new ValidateObjectIdPipe('')) params): Promise<void> {
+    return this.service.updateStatus(new ObjectID(params.id), true);
+  }
+
+  @Patch(':id')
+  async restore(@Param(new ValidateObjectIdPipe('')) params): Promise<void> {
+    return this.service.updateStatus(new ObjectID(params.id), false);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
-    return this.service.delete(id);
+    return this.service.delete(new ObjectID(id));
+  }
+
+  @Delete()
+  async clear(): Promise<void> {
+    return this.service.clear();
   }
 }

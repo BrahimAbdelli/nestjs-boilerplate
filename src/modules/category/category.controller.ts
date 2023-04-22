@@ -24,7 +24,10 @@ import { CategoryCreateDto, CategoryUpdateDto } from './dtos';
 
 @Controller('categories')
 @ApiTags('categories')
-export class CategoryController extends BaseController<CategoryEntity, CategoryCreateDto, CategoryUpdateDto> {
+export class CategoryController extends BaseController<CategoryEntity, CategoryCreateDto, CategoryUpdateDto>(
+  CategoryCreateDto,
+  CategoryUpdateDto
+) {
   constructor(private readonly categoryService: CategoryService) {
     super(categoryService);
   }

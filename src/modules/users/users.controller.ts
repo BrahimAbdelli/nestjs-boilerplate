@@ -7,7 +7,10 @@ import { UserCreateDto, UserUpdateDto } from './dtos';
 
 @ApiTags('users')
 @Controller('users')
-export class UsersController extends BaseController<UserEntity, UserCreateDto, UserUpdateDto> {
+export class UsersController extends BaseController<UserEntity, UserCreateDto, UserUpdateDto>(
+  UserCreateDto,
+  UserUpdateDto
+) {
   constructor(private readonly userService: UserService) {
     super(userService);
   }

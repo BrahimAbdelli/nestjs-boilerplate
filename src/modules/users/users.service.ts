@@ -21,10 +21,10 @@ export class UserService extends BaseService<UserEntity, UserCreateDto, UserUpda
     super(userRepository, request);
   }
 
-  async findAll(): Promise<UserEntity[]> {
+  /*   async findAll(): Promise<UserEntity[]> {
     const users = await this.userRepository.find({ status: true });
     return await this.populateUsers(users);
-  }
+  } */
 
   async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const findOneOptions = {

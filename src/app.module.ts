@@ -3,11 +3,14 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './modules/category/category.module';
+import { devConfig } from './config/dev.config';
+import { prodConfig } from './config/prod.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      load: [process.env.NODE_ENV == 'DEV' ? devConfig : prodConfig]
     }),
     CacheModule.register(),
     TypeOrmModule.forRoot({

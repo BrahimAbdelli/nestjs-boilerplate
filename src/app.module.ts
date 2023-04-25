@@ -1,10 +1,11 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { CacheModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './modules/category/category.module';
 import { devConfig } from './config/dev.config';
 import { prodConfig } from './config/prod.config';
+import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -30,4 +31,8 @@ import { prodConfig } from './config/prod.config';
   controllers: [],
   providers: []
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

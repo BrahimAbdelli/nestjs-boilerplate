@@ -1,14 +1,16 @@
 import { Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { ObjectID } from 'mongodb';
-import { DeepPartial, Repository } from 'typeorm';
-import { findByField } from '../find-by-field.utils';
+import { FindConditions, FindManyOptions, Repository } from 'typeorm';
+import { PaginationConstants } from '../constants';
+import { findByField } from '../utils/find-by-field.utils';
+import { ComparaisonTypeEnum, ComparatorEnum, QueryDto } from '../search/search-dto';
 import { IGetUserAuthInfoRequest } from '../user-request.interface';
 import { BaseEntity } from './base.entity';
 import { BaseCreateDto } from './dtos/create-base.dto';
 import { BaseUpdateDto } from './dtos/update-base.dto';
 import { IBaseService } from './interfaces/base-service.interface';
-import { PaginationConstants } from '../constants';
+import { SearchResponse } from '../search/search-response.dto';
 
 export abstract class BaseService<
   T extends BaseEntity,
@@ -22,7 +24,7 @@ export abstract class BaseService<
   ) {}
 
   async findAll(condition = { isDeleted: false }): Promise<T[]> {
-    let where = { ...condition };
+    const where: FindConditions<T> = { ...condition };
     return this.repository.find({ where });
   }
 
@@ -82,7 +84,7 @@ export abstract class BaseService<
     if (this.request.user) {
       newEntity.userCreated = this.request.user._id;
     }
-    return this.repository.save(newEntity as DeepPartial<T>);
+    return this.repository.save(newEntity as any);
   }
 
   async delete(_id: ObjectID): Promise<void> {
@@ -98,7 +100,7 @@ export abstract class BaseService<
     let entity = {} as T;
     entity = await findByField(this.repository, { _id }, true);
     entity.isDeleted = isDeleted;
-    return await this.repository.save(entity as DeepPartial<T>);
+    return await this.repository.save(entity as any);
   }
 
   /**
@@ -106,5 +108,44 @@ export abstract class BaseService<
    */
   async clear(): Promise<void> {
     await this.repository.clear();
+  }
+
+  async search(data: QueryDto<T>): Promise<SearchResponse<T>> {
+    const query: FindManyOptions<T> = { where: {} }; // initialize query to an empty object
+
+    const queryTake = +data.take || PaginationConstants.DEFAULT_TAKE;
+    const querySkip = +data.skip || PaginationConstants.DEFAULT_SKIP;
+    const filterCriteria = data.attributes.map(attribute => {
+      return {
+        [attribute.key]:
+          attribute.comparator == ComparatorEnum.EQUALS
+            ? attribute.value
+            : attribute.comparator == ComparatorEnum.LIKE
+            ? RegExp(`^${attribute.value}`, 'i')
+            : attribute.value
+      };
+    });
+    query.where =
+      data.type.toUpperCase() === ComparaisonTypeEnum.AND ? { $and: filterCriteria } : { $or: filterCriteria };
+    const [result, total] = await this.repository.findAndCount({
+      where: query.where,
+      order: data.orders,
+      ...(data.isPaginable == true || data.isPaginable == undefined
+        ? {
+            take: queryTake,
+            skip: querySkip
+          }
+        : {})
+    });
+    return {
+      data: result,
+      count: total,
+      ...(data.isPaginable == true || data.isPaginable == undefined
+        ? {
+            page: querySkip,
+            totalPages: total == queryTake ? Math.trunc(total / queryTake) : Math.trunc(total / queryTake + 1)
+          }
+        : {})
+    };
   }
 }

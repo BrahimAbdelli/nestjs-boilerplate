@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import { BeforeInsert, BeforeUpdate, Column, ObjectID, ObjectIdColumn } from 'typeorm';
 import { IUser } from '../../modules/users/interface/user.interface';
-import { transformEntity } from '../transform-entity.utlis';
+import { transformEntity } from '../utils/transform-entity.utlis';
 
 export abstract class BaseEntity {
   @ApiProperty()

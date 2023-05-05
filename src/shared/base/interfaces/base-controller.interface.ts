@@ -1,6 +1,7 @@
 import { ObjectID } from 'mongodb';
 
 import { BaseEntity } from '../base.entity';
+import { QueryDto } from '../../search/search-dto';
 
 export interface IBaseController<T extends BaseEntity, createDto, updateDto> {
   findAll(): Promise<T[]>;
@@ -12,4 +13,5 @@ export interface IBaseController<T extends BaseEntity, createDto, updateDto> {
   unarchive(_id: ObjectID): Promise<T>;
   delete(_id: ObjectID): Promise<void>;
   clear(): Promise<void>;
+  search(query: QueryDto<T>);
 }

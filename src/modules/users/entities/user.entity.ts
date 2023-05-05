@@ -1,8 +1,6 @@
 import { IUser } from './../interface/user.interface';
-import { ObjectID } from 'mongodb';
 import { Expose, Transform } from 'class-transformer';
 import { Entity, Column, ObjectIdColumn, AfterLoad, BeforeInsert, BeforeUpdate, Index } from 'typeorm';
-import { transformEntity } from '../../../shared/transform-entity.utlis';
 import * as crypto from 'crypto';
 import { BaseEntity } from '../../../shared/base/base.entity';
 

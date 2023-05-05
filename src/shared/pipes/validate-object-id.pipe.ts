@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { ObjectID } from 'mongodb';
-import { throwError } from '../throw-error.utils';
+import { throwError } from '../utils/throw-error.utils';
 
 @Injectable()
 export class ValidateObjectIdPipe implements PipeTransform<any> {

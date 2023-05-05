@@ -4,7 +4,7 @@ import { Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
 import { IGetUserAuthInfoRequest } from '../../../shared/user-request.interface';
-import { throwError } from '../../../shared/throw-error.utils';
+import { throwError } from '../../../shared/utils/throw-error.utils';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

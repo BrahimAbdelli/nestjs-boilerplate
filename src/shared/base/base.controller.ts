@@ -5,6 +5,8 @@ import { ValidateObjectIdPipe } from './../pipes/validate-object-id.pipe';
 import { BaseEntity } from './base.entity';
 import { IBaseController } from './interfaces/base-controller.interface';
 import { IBaseService } from './interfaces/base-service.interface';
+import { QueryDto } from '../search/search-dto';
+import { ApiBody } from '@nestjs/swagger';
 
 export function BaseController<T extends BaseEntity, createDto, updateDto>(
   createDto: Type<createDto>,
@@ -28,7 +30,8 @@ export function BaseController<T extends BaseEntity, createDto, updateDto>(
       return this.service.paginate(+take, +skip);
     }
 
-    @Get(':id')
+    @Get('find/:id')
+    @ApiBody({ required: true, description: 'fetches the entity by ID' })
     async findOne(@Param(new ValidateObjectIdPipe('')) params): Promise<T> {
       return this.service.findOne(new ObjectID(params.id));
     }
@@ -63,6 +66,12 @@ export function BaseController<T extends BaseEntity, createDto, updateDto>(
     @Delete()
     async clear(): Promise<void> {
       return this.service.clear();
+    }
+
+    @Get('search')
+    @ApiBody({ type: [QueryDto] })
+    async search(@Body() query: QueryDto<T>) {
+      return this.service.search(query);
     }
   }
   return GenericsController;

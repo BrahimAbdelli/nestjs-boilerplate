@@ -5,12 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ObjectID } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { REQUEST } from '@nestjs/core';
-import { findByField } from '../../shared/find-by-field.utils';
+import { findByField } from '../../shared/utils/find-by-field.utils';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
-import { throwError } from '../../shared/throw-error.utils';
 import { IUser } from './interface/user.interface';
 import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
+import { throwError } from '../../shared/utils/throw-error.utils';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService extends BaseService<UserEntity, UserCreateDto, UserUpdateDto> {

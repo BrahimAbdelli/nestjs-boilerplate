@@ -5,8 +5,8 @@ import { ObjectID } from 'mongodb';
 import { Transform, Expose, Exclude } from 'class-transformer';
 import { cateogryStates } from './category.state.enum';
 import { IUser } from '../../users/interface/user.interface';
-import { transformEntity } from '../../../shared/transform-entity.utlis';
 import { BaseEntity } from '../../../shared/base/base.entity';
+import { transformEntity } from '../../../shared/utils/transform-entity.utlis';
 
 @Entity('category')
 @Unique(UNIQUE_KEY_CONSTRAINT, ['name'])
@@ -15,6 +15,10 @@ export class CategoryEntity extends BaseEntity {
   @Column()
   @Expose()
   name: string;
+
+  @Column()
+  @Expose()
+  quantity: number;
 
   @Column()
   @Expose()

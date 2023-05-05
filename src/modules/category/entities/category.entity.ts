@@ -1,15 +1,12 @@
-import { UNIQUE_KEY_CONSTRAINT } from '../../../shared/constants/error.const';
-import { BeforeInsert, BeforeUpdate, Column, Entity, ObjectIdColumn, Unique } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { ObjectID } from 'mongodb';
-import { Transform, Expose, Exclude } from 'class-transformer';
-import { cateogryStates } from './category.state.enum';
-import { IUser } from '../../users/interface/user.interface';
+import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../../../shared/base/base.entity';
 import { transformEntity } from '../../../shared/utils/transform-entity.utlis';
+import { IUser } from '../../users/interface/user.interface';
+import { cateogryStates } from './category.state.enum';
 
 @Entity('category')
-@Unique(UNIQUE_KEY_CONSTRAINT, ['name'])
 @Exclude()
 export class CategoryEntity extends BaseEntity {
   @Column()

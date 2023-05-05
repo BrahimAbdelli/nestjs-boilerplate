@@ -1,6 +1,5 @@
-import { IsNotEmpty, Length, IsOptional, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ObjectID } from 'mongodb';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 import { BaseCreateDto } from '../../../shared/base/dtos/create-base.dto';
 
 export class CategoryCreateDto extends BaseCreateDto {

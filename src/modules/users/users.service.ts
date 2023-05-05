@@ -1,36 +1,34 @@
-import { IGetUserAuthInfoRequest } from './../../shared/user-request.interface';
-import { BaseService } from './../../shared/base/base.service';
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ObjectID } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
 import { REQUEST } from '@nestjs/core';
-import { findByField } from '../../shared/utils/find-by-field.utils';
-import * as jwt from 'jsonwebtoken';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as crypto from 'crypto';
-import { IUser } from './interface/user.interface';
-import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
+import * as jwt from 'jsonwebtoken';
+import { ObjectID, Repository } from 'typeorm';
+import { findByField } from '../../shared/utils/find-by-field.utils';
 import { throwError } from '../../shared/utils/throw-error.utils';
+import { IGetUserAuthInfoRequest } from './../../shared/user-request.interface';
+import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
+import { UserEntity } from './entities/user.entity';
+import { IUser } from './interface/user.interface';
 
 @Injectable({ scope: Scope.REQUEST })
-export class UserService extends BaseService<UserEntity, UserCreateDto, UserUpdateDto> {
+export class UserService {
   constructor(
     @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
     @Inject(REQUEST) public readonly request: IGetUserAuthInfoRequest
-  ) {
-    super(userRepository, request);
-  }
+  ) {}
 
-  /*   async findAll(): Promise<UserEntity[]> {
-    const users = await this.userRepository.find({ status: true });
+  async findAll(): Promise<UserEntity[]> {
+    const users = await this.userRepository.find({ status: true, isDeleted: false });
     return await this.populateUsers(users);
-  } */
+  }
 
   async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const findOneOptions = {
       email: loginUserDto.email,
       password: crypto.createHmac('sha256', loginUserDto.password).digest('hex'),
-      status: true
+      status: true,
+      isDeleted: false
     };
 
     let authUser = await this.userRepository.findOne(findOneOptions);
@@ -109,9 +107,6 @@ export class UserService extends BaseService<UserEntity, UserCreateDto, UserUpda
 
   async createUser(dto: UserCreateDto): Promise<IUser> {
     const newUser = Object.assign(new UserEntity({}), dto);
-    newUser.userCreated = this.request.user._id;
-    newUser.userUpdated = this.request.user._id;
-
     return await this.userRepository.save(newUser);
   }
 
@@ -128,6 +123,7 @@ export class UserService extends BaseService<UserEntity, UserCreateDto, UserUpda
     const user = await findByField(this.userRepository, { id }, true);
     if (!user.roles.includes('admin')) {
       user.status = false;
+      user.isDeleted = false;
     }
     return await this.userRepository.save(user);
   }

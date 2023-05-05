@@ -1,7 +1,6 @@
-import { IUser } from './../interface/user.interface';
-import { Expose, Transform } from 'class-transformer';
-import { Entity, Column, ObjectIdColumn, AfterLoad, BeforeInsert, BeforeUpdate, Index } from 'typeorm';
+import { Expose } from 'class-transformer';
 import * as crypto from 'crypto';
+import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '../../../shared/base/base.entity';
 
 @Entity('users')

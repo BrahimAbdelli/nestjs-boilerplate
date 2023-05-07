@@ -35,12 +35,12 @@ export abstract class BaseEntity {
 
   @BeforeInsert()
   @BeforeUpdate()
-  protected beforeActions() {
+  private beforeActions() {
     this.lastUpdateAt = new Date();
   }
 
   @BeforeInsert()
-  protected beforeInsertActions() {
+  private beforeInsertActions() {
     this.createdAt = new Date();
   }
 }

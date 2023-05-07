@@ -6,7 +6,6 @@ export interface IUser {
   email: string;
   roles: string[];
   resetPasswordToken?: string;
-  image?: string;
 }
 
 export interface IUserLogin extends IUser {

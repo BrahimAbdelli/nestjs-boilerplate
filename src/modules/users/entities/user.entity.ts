@@ -62,7 +62,7 @@ export class UserEntity extends BaseEntity {
 
   @BeforeInsert()
   @BeforeUpdate()
-  protected beforeActions() {
+  private beforeActionsPassword() {
     if (this.tempPassword !== this.password) {
       this.password = crypto.createHmac('sha256', this.password).digest('hex');
     }
@@ -72,7 +72,7 @@ export class UserEntity extends BaseEntity {
   }
 
   @BeforeInsert()
-  protected beforeInsertActions() {
+  private beforeInsertActionsUser() {
     this.status = true;
     this.createdAt = new Date();
   }

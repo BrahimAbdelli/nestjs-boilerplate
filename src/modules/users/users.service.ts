@@ -107,6 +107,7 @@ export class UserService {
 
   async createUser(dto: UserCreateDto): Promise<IUser> {
     const newUser = Object.assign(new UserEntity({}), dto);
+    newUser.isDeleted = false;
     return await this.userRepository.save(newUser);
   }
 
@@ -147,10 +148,7 @@ export class UserService {
         id: user.id,
         username: user.username,
         email: user.email,
-        image: user.image,
-        roles: user.roles,
-        rdi: user.rdi,
-        club: user.club
+        roles: user.roles
       },
       process.env.SECRET,
       { expiresIn: process.env.TOKEN_EXPIRATION || '15d' }

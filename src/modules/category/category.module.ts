@@ -13,14 +13,6 @@ import { CategoryEntity } from './entities/category.entity';
 })
 export class CategoryModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes
-      /*       { path: 'categories/*', method: RequestMethod.DELETE },
-      { path: 'categories/*', method: RequestMethod.PUT },
-      { path: 'categories', method: RequestMethod.GET },
-      { path: 'categories/*', method: RequestMethod.GET },
-      { path: 'categories/*', method: RequestMethod.PATCH } */
-      ();
+    consumer.apply(AuthMiddleware).forRoutes();
   }
 }

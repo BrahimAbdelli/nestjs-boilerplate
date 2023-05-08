@@ -6,6 +6,9 @@ import { CategoryModule } from './modules/category/category.module';
 import { devConfig } from './config/dev.config';
 import { prodConfig } from './config/prod.config';
 import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { join } from 'path';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -24,9 +27,22 @@ import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
       useUnifiedTopology: true,
       autoLoadEntities: true
     }),
-
+    MailerModule.forRoot({
+      transport: {
+        secure: true, // use SSL
+        auth: {},
+        template: {
+          dir: join(__dirname, '..', 'templates'), // from src not dist folder (perhaps needs to change in Prod !!!!!!!)
+          /* adapter: new HandlebarsAdapter(), // or new PugAdapter */
+          options: {
+            strict: true
+          }
+        }
+      }
+    }),
     UsersModule,
-    CategoryModule
+    CategoryModule,
+    ProductModule
   ],
   controllers: [],
   providers: []

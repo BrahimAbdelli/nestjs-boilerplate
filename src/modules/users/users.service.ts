@@ -10,13 +10,19 @@ import { IGetUserAuthInfoRequest } from './../../shared/user-request.interface';
 import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
 import { IUser } from './interface/user.interface';
+import { connect, Email } from 'node-mailjet';
+import { compile } from 'handlebars';
+import * as fs from 'fs';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
+  private mailjet: Email.Client;
   constructor(
     @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
     @Inject(REQUEST) public readonly request: IGetUserAuthInfoRequest
-  ) {}
+  ) {
+    this.mailjet = connect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY);
+  }
 
   async findAll(): Promise<UserEntity[]> {
     const users = await this.userRepository.find({ status: true, isDeleted: false });
@@ -81,28 +87,40 @@ export class UserService {
     const reset_password = process.env.RESET_PASSWORD_EXPIRATION || '24h';
     const browser_name = this.request.headers['user-agent'] ?? 'Unkown Device';
     const ip = this.request.ip ?? 'Unknow Ip';
-    const hostname = this.request.hostname;
     const action_url = process.env.RESET_PASSWORD_URL + user.resetPasswordToken;
-
-    /*     try {
-      return await this.mailerService.sendMail({
-        to: user.email,
-        from: '"Esprit administration 👻" <admin@esprit.tn>',
-        subject: 'Reset password ✔',
-        template: 'reset', // The `.pug` or `.hbs` extension is appended automatically.
-        context: {
-          // Data to be sent to template engine.
-          name: user.username,
-          ip,
-          action_url,
-          browser_name,
-          reset_password,
-          support_email: 'contact@esprit.tn'
-        }
+    const template = compile(fs.readFileSync('templates/reset.hbs', 'utf8'));
+    const html = template({
+      username: user.username,
+      ip,
+      action_url,
+      browser_name,
+      reset_password,
+      support_email: 'brahimabdelli994@gmail.com'
+    });
+    try {
+      return await this.mailjet.post('send', { version: 'v3.1' }).request({
+        Messages: [
+          {
+            From: {
+              Email: process.env.MAILJET_EMAIL,
+              Name: 'Brahim'
+            },
+            To: [
+              {
+                //For testing purposes i used the same email
+                Email: process.env.MAILJET_EMAIL,
+                Name: user.name + ' ' + user.lastname
+              }
+            ],
+            Subject: 'Reset your password',
+            TextPart: 'My first Mailjet email',
+            HTMLPart: html
+          }
+        ]
       });
     } catch (error) {
       throwError({ Email: error.message }, 'An error occured while sending reset mail');
-    } */
+    }
   }
 
   async createUser(dto: UserCreateDto): Promise<IUser> {

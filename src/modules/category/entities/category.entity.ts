@@ -25,7 +25,7 @@ export class CategoryEntity extends BaseEntity {
   @Expose()
   isDeleted: boolean;
 
-  @Column()
+  /*   @Column()
   @Transform(transformEntity)
   userCreated: ObjectID | IUser;
 
@@ -39,5 +39,5 @@ export class CategoryEntity extends BaseEntity {
 
   @Column()
   @Expose()
-  lastUpdateAt: Date;
+  lastUpdateAt: Date; */
 }

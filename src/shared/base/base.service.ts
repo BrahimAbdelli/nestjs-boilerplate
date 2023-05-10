@@ -65,7 +65,10 @@ export abstract class BaseService<
   async create(data: createDto): Promise<T> {
     const newEntity = this.createObject(data);
     newEntity.isDeleted = false;
-    //return await this.repository.save(newEntity as any);
+    if (this.request.user) {
+      newEntity.userCreated = this.request.user._id;
+      newEntity.userUpdated = this.request.user._id;
+    }
     const entity = this.repository.create(newEntity as any);
     return this.repository.save(entity as any);
   }
@@ -77,13 +80,15 @@ export abstract class BaseService<
    * @returns : The modified entity
    */
   async update(_id: ObjectID, dto: updateDto): Promise<T> {
-    const newEntity = await this.repository.preload({
+    let newEntity = this.createObject(dto);
+    if (this.request.user) {
+      newEntity.userUpdated = this.request.user._id;
+    }
+    newEntity = await this.repository.preload({
       _id: (await this.repository.findOne(_id))._id,
       ...dto
     } as any);
-    if (this.request.user) {
-      newEntity.userCreated = this.request.user._id;
-    }
+
     return this.repository.save(newEntity as any);
   }
 
@@ -100,6 +105,9 @@ export abstract class BaseService<
     let entity = {} as T;
     entity = await findByField(this.repository, { _id }, true);
     entity.isDeleted = isDeleted;
+    if (this.request.user) {
+      entity.userUpdated = this.request.user._id;
+    }
     return await this.repository.save(entity as any);
   }
 

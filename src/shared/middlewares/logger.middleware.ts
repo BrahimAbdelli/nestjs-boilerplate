@@ -92,7 +92,7 @@ const getResponseLog = (res: Response) => {
     const responseLog = {
       response: {
         statusCode: res.statusCode,
-        body: JSON.parse(body) || body || {},
+        body: body ? JSON.parse(body) || body || {} : {},
         // Returns a shallow copy of the current outgoing headers
         headers: res.getHeaders()
       }

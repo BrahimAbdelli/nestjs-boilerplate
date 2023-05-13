@@ -59,8 +59,8 @@ export function BaseController<T extends BaseEntity, createDto, updateDto>(
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: number): Promise<void> {
-      return this.service.delete(new ObjectID(id));
+    async delete(@Param(new ValidateObjectIdPipe('')) params): Promise<void> {
+      return this.service.delete(new ObjectID(params.id));
     }
 
     @Delete()

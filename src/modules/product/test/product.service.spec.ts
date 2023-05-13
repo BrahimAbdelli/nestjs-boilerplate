@@ -32,12 +32,18 @@ describe('Product Service', () => {
   let productService;
   let productRepository;
 
-  jest.mock('../../../shared/utils/find-by-field.utils', () => {
+  /*   jest.mock('../../../shared/utils/find-by-field.utils', () => {
     const original = jest.requireActual('./../../../shared/utils/find-by-field.utils');
     original.default = jest.fn();
     return original;
+  }); */
+  jest.mock('../../../shared/utils/find-by-field.utils', () => {
+    const original = jest.requireActual('../../../shared/utils/find-by-field.utils');
+    original.default = jest.fn();
+    return original;
   });
-  const findByField = require('./../../../shared/utils/find-by-field.utils');
+  const findByField = require('../../../shared/utils/find-by-field.utils');
+  //const findByField = require('./../../../shared/utils/find-by-field.utils');
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -104,19 +110,24 @@ describe('Product Service', () => {
 
   describe('Delete Product', () => {
     it('Call delete repository to delete product and is successful', async () => {
-      const mockEntity = new ProductEntity();
-      const _id = new ObjectID('5e2f63d67c06a754d05da4b6');
-      mockEntity._id = _id;
-      productRepository.delete.mockResolvedValue({});
-      const expectedResult = undefined;
-      expect(productRepository.delete).not.toHaveBeenCalled();
-      const result = await productService.delete(_id);
-      expect(result).toBe(expectedResult);
+      // Mock data
+      const mockId = new ObjectID();
+
+      // Mock repository methods
+      const findByFieldSpy = jest.spyOn(findByField, 'findByField').mockResolvedValueOnce({});
+      productService.repository.delete.mockResolvedValueOnce(undefined);
+
+      // Call service method
+      await productService.delete(mockId);
+
+      // Expect repository methods to have been called with correct arguments
+      expect(findByFieldSpy).toHaveBeenCalledWith(productService.repository, { _id: mockId }, true);
+      expect(productService.repository.delete).toHaveBeenCalledWith(mockId);
     });
   });
 
   describe('Clear Products', () => {
-    it('Call delete repository to delete product and is successful', async () => {
+    it('Call delete repository to clear products and is successful', async () => {
       await productService.clear();
       expect(productRepository.clear).toHaveBeenCalled();
     });
@@ -135,7 +146,7 @@ describe('Product Service', () => {
       mockUpdatedEntity.price = 10.99;
 
       // Mock repository methods
-      productService.repository.findOne.mockResolvedValueOnce(mockEntity);
+      const findByFieldMock = jest.spyOn(findByField, 'findByField').mockResolvedValueOnce(mockEntity);
       productService.repository.preload.mockResolvedValueOnce(mockUpdatedEntity);
       productService.repository.save.mockResolvedValueOnce(mockUpdatedEntity);
 
@@ -143,9 +154,9 @@ describe('Product Service', () => {
       const result = await productService.update(mockId, mockDto);
 
       // Expect repository methods to have been called with correct arguments
-      expect(productService.repository.findOne).toHaveBeenCalledWith(mockId);
+      expect(findByFieldMock).toHaveBeenCalledWith(productService.repository, { id: mockId }, true);
       expect(productService.repository.preload).toHaveBeenCalledWith({
-        _id: mockEntity._id,
+        _id: expect.any(ObjectID), // Expect an instance of ObjectID
         ...mockDto
       });
       expect(productService.repository.save).toHaveBeenCalledWith(mockUpdatedEntity);

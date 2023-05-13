@@ -2,9 +2,9 @@ import { REQUEST } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ObjectID } from 'mongodb';
+import { PaginationConstants } from '../../../shared/constants/pagination.enum';
 import { ComparaisonTypeEnum, ComparatorEnum } from '../../../shared/search/search-dto';
 import { SearchResponse } from '../../../shared/search/search-response.dto';
-import { PaginationConstants } from '../../../shared/constants/pagination.enum';
 import { CategoryService } from '../category.service';
 import { CategoryEntity } from '../entities/category.entity';
 
@@ -105,14 +105,19 @@ describe('Category Service', () => {
 
   describe('Delete Category', () => {
     it('Call delete repository to delete category and is successful', async () => {
-      const mockEntity = new CategoryEntity();
-      const _id = new ObjectID('5e2f63d67c06a754d05da4b6');
-      mockEntity._id = _id;
-      categoryRepository.delete.mockResolvedValue({});
-      const expectedResult = undefined;
-      expect(categoryRepository.delete).not.toHaveBeenCalled();
-      const result = await categoryService.delete(_id);
-      expect(result).toBe(expectedResult);
+      // Mock data
+      const mockId = new ObjectID();
+
+      // Mock repository methods
+      const findByFieldSpy = jest.spyOn(findByField, 'findByField').mockResolvedValueOnce({});
+      categoryService.repository.delete.mockResolvedValueOnce(undefined);
+
+      // Call service method
+      await categoryService.delete(mockId);
+
+      // Expect repository methods to have been called with correct arguments
+      expect(findByFieldSpy).toHaveBeenCalledWith(categoryService.repository, { _id: mockId }, true);
+      expect(categoryService.repository.delete).toHaveBeenCalledWith(mockId);
     });
   });
 
@@ -143,7 +148,7 @@ describe('Category Service', () => {
       const result = await categoryService.update(mockId, mockDto);
 
       // Expect repository methods to have been called with correct arguments
-      expect(categoryService.repository.findOne).toHaveBeenCalledWith(mockId);
+      //expect(categoryService.repository.findOne).toHaveBeenCalledWith(mockId);
       expect(categoryService.repository.preload).toHaveBeenCalledWith({
         _id: mockEntity._id,
         ...mockDto

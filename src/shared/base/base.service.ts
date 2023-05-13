@@ -49,7 +49,10 @@ export abstract class BaseService<
   }
 
   async findOne(_id: ObjectID): Promise<T> {
-    return this.repository.findOne(_id);
+    // throws error 404 if not found
+    const entity = await findByField(this.repository, { id: _id }, true);
+    return await this.populate(entity);
+    //return this.repository.findOne(_id);
   }
 
   createObject(dto: createDto | updateDto): T {
@@ -85,7 +88,7 @@ export abstract class BaseService<
       newEntity.userUpdated = this.request.user._id;
     }
     newEntity = await this.repository.preload({
-      _id: (await this.repository.findOne(_id))._id,
+      _id: (await findByField(this.repository, { id: _id }, true))._id,
       ...dto
     } as any);
 
@@ -93,6 +96,7 @@ export abstract class BaseService<
   }
 
   async delete(_id: ObjectID): Promise<void> {
+    await findByField(this.repository, { _id }, true);
     await this.repository.delete(_id);
   }
 
@@ -115,7 +119,18 @@ export abstract class BaseService<
    * This method deletes permanently from the database
    */
   async clear(): Promise<void> {
-    await this.repository.clear();
+    try {
+      await this.repository.clear();
+    } catch (error) {
+      if (error.name === 'MongoError' && error.code === 26) {
+        // Handle "ns not found" error
+        // Perform alternative logic or error handling
+        console.log('Collection does not exist. Unable to clear.');
+      } else {
+        // Handle other errors
+        console.log('An error occurred:', error);
+      }
+    }
   }
 
   async search(data: QueryDto<T>): Promise<SearchResponse<T>> {
@@ -155,5 +170,29 @@ export abstract class BaseService<
           }
         : {})
     };
+  }
+
+  /**
+   * Populate entit(y|ies) passed in paramter with "userCreated" and "userUpdated" properties
+   * @param entities Array of entities OR an entity to populate
+   * @returns Entit(y|ies) populated
+   */
+  public async populate(entities: Array<any> | any): Promise<Array<any> | any> {
+    if (!entities) return;
+
+    let tmp = entities;
+    if (!Array.isArray(tmp)) tmp = [tmp];
+
+    for (const idx in tmp) {
+      const { userCreated, userUpdated } = tmp[idx];
+
+      if (userCreated)
+        tmp[idx].userCreated = await findByField(this.repository, { _id: userCreated?._id ?? userCreated });
+
+      if (userUpdated)
+        tmp[idx].userUpdated = await findByField(this.repository, { _id: userUpdated?._id ?? userUpdated });
+    }
+
+    return Array.isArray(entities) ? tmp : tmp[0];
   }
 }

@@ -1,11 +1,11 @@
-import { Repository } from 'typeorm';
 import { ObjectID } from 'mongodb';
+import { Repository } from 'typeorm';
 import { throwError } from './throw-error.utils';
 /**
  * Find entity with matched field
  * @param repository  corresponding entity repository
  * @param field object containing single field
- * @example {_id : "1234566" }
+ * @example {_id : "645ead8b586d13a6932d46dd" }
  * {title : "some title to check if exisits"}
  * @param omitError whether to throw error if entity not found
  * @default false

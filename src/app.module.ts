@@ -1,14 +1,15 @@
+import { MailerModule } from '@nestjs-modules/mailer';
 import { CacheModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoryModule } from './modules/category/category.module';
+import { join } from 'path';
 import { devConfig } from './config/dev.config';
 import { prodConfig } from './config/prod.config';
-import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { join } from 'path';
+import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
+import { UsersModule } from './modules/users/users.module';
+import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
+import { BestModule } from './best/best.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { ProductModule } from './modules/product/product.module';
     }),
     UsersModule,
     CategoryModule,
-    ProductModule
+    ProductModule,
+    BestModule
   ],
   controllers: [],
   providers: []

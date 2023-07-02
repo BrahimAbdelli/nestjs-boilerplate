@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsJWT, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsJWT, IsNotEmpty, Length } from 'class-validator';
 
 export class UpdateNewPasswordDto {
   @ApiProperty()

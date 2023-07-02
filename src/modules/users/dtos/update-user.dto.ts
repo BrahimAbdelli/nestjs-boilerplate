@@ -1,6 +1,6 @@
-import { BaseUpdateDto } from './../../../shared/base/dtos/update-base.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { Length, IsNotEmpty, IsEmail } from 'class-validator';
+import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { BaseUpdateDto } from './../../../shared/base/dtos/update-base.dto';
 
 export class UserUpdateDto extends BaseUpdateDto {
   @ApiProperty()

@@ -1,7 +1,7 @@
 import { ObjectID } from 'mongodb';
 
-import { BaseEntity } from '../base.entity';
 import { QueryDto } from '../../search/search-dto';
+import { BaseEntity } from '../base.entity';
 
 export interface IBaseController<T extends BaseEntity, createDto, updateDto> {
   findAll(): Promise<T[]>;

@@ -1,12 +1,12 @@
 import { Body, Delete, Get, Param, Patch, Post, Put, Query, Type, UsePipes } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
 import { ObjectID } from 'mongodb';
 import { AbstractValidationPipe } from '../pipes';
+import { QueryDto } from '../search/search-dto';
 import { ValidateObjectIdPipe } from './../pipes/validate-object-id.pipe';
 import { BaseEntity } from './base.entity';
 import { IBaseController } from './interfaces/base-controller.interface';
 import { IBaseService } from './interfaces/base-service.interface';
-import { QueryDto } from '../search/search-dto';
-import { ApiBody } from '@nestjs/swagger';
 
 export function BaseController<T extends BaseEntity, createDto, updateDto>(
   createDto: Type<createDto>,

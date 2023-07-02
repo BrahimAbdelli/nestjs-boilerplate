@@ -9,7 +9,6 @@ import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
 import { UsersModule } from './modules/users/users.module';
 import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
-import { BestModule } from './best/best.module';
 
 @Module({
   imports: [
@@ -43,8 +42,7 @@ import { BestModule } from './best/best.module';
     }),
     UsersModule,
     CategoryModule,
-    ProductModule,
-    BestModule
+    ProductModule
   ],
   controllers: [],
   providers: []

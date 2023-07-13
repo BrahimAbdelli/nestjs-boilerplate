@@ -55,7 +55,7 @@ export abstract class BaseService<
     //return this.repository.findOne(_id);
   }
 
-  createObject(dto: createDto | updateDto): T {
+  private createObject(dto: createDto | updateDto): T {
     const newEntity = {} as T;
     return Object.assign(newEntity, dto);
   }
@@ -177,7 +177,7 @@ export abstract class BaseService<
    * @param entities Array of entities OR an entity to populate
    * @returns Entit(y|ies) populated
    */
-  public async populate(entities: Array<any> | any): Promise<Array<any> | any> {
+  private async populate(entities: Array<T> | any): Promise<Array<T> | any> {
     if (!entities) return;
 
     let tmp = entities;

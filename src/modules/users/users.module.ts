@@ -13,12 +13,13 @@ import { UserService } from './users.service';
 })
 export class UsersModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(
-      { path: 'users', method: RequestMethod.GET },
-      { path: 'user/*', method: RequestMethod.GET },
-      { path: 'user/*', method: RequestMethod.DELETE },
-      { path: 'user/*', method: RequestMethod.PUT }
-      // { path: 'user', method: RequestMethod.POST }
-    );
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        { path: 'users', method: RequestMethod.GET },
+        { path: 'users/*', method: RequestMethod.GET },
+        { path: 'users/*', method: RequestMethod.DELETE },
+        { path: 'users/*', method: RequestMethod.PUT }
+      );
   }
 }

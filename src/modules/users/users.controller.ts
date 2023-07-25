@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,13 +19,13 @@ export class UsersController {
     private readonly userService: UserService
   ) {}
 
-  @Get('users')
+  @Get('')
   //@Roles(adminRoles.admin)
-  async findAllUsers(): Promise<UserEntity[]> {
+  async findAll(): Promise<UserEntity[]> {
     return await this.userService.findAll();
   }
 
-  @Get('user/email/:email')
+  @Get('email/:email')
   @ApiBody({ description: 'email', required: true })
   async findByEmail(@Param() params): Promise<IUser> {
     // throws error 404 if not found
@@ -33,7 +33,7 @@ export class UsersController {
     return this.userService.populateUsers(user);
   }
 
-  @Get('user/username/:username')
+  @Get('username/:username')
   @ApiBody({ description: 'username', required: true })
   async findByUsername(@Param() params): Promise<IUser> {
     // throws error 404 if not found
@@ -49,18 +49,17 @@ export class UsersController {
     return await this.userService.populateUsers(user);
   }
 
-  @Post('user/login')
+  @Post('login')
   @ApiBody({ type: [LoginUserDto] })
   async login(@Body() loginUserDto: LoginUserDto): Promise<IUserLogin> {
     // throws error 404 if not found
     const user = await this.userService.login(loginUserDto);
-
     const token = await this.userService.generateJWT(user);
 
     return { ...user, token };
   }
 
-  @Post('user/forgot-password/:email')
+  @Post('forgot-password/:email')
   @ApiBody({ description: 'email', required: true })
   async forgotPassword(@Param() params): Promise<IUser> {
     // throws error 404 if not found
@@ -70,7 +69,7 @@ export class UsersController {
     return user;
   }
 
-  @Post('user/reset-password')
+  @Post('reset-password')
   @ApiBody({ type: [UpdateNewPasswordDto] })
   async updateNewPassword(@Body() updateNewPasswordDto: UpdateNewPasswordDto): Promise<IUser> {
     return await this.userService.updateNewPassword(updateNewPasswordDto);
@@ -83,7 +82,7 @@ export class UsersController {
     // check uniqueness of username/email & throws errors
     await isFieldUnique(this.userRepository, { username: userData.username });
     await isFieldUnique(this.userRepository, { email: userData.email });
-    return await this.userService.createUser(userData);
+    return await this.userService.create(userData);
   }
 
   @Put('user/:id')
@@ -97,13 +96,20 @@ export class UsersController {
     await isFieldUnique(this.userRepository, { username: userData.username }, params.id);
     await isFieldUnique(this.userRepository, { email: userData.email }, params.id);
 
-    return await this.userService.updateUser(toUpdate, userData);
+    return await this.userService.update(toUpdate, userData);
   }
 
-  @Delete('user/:id')
+  @Patch('archive/:id')
   //@Roles(adminRoles.admin)
-  async delete(@Param(new ValidateObjectIdPipe('User')) params) {
+  async archive(@Param(new ValidateObjectIdPipe('User')) params) {
     // throws error 404 if not found
-    return await this.userService.deleteUser(params.id);
+    return await this.userService.archive(params.id);
+  }
+
+  @Patch('unarchive/:id')
+  //@Roles(adminRoles.admin)
+  async unarchive(@Param(new ValidateObjectIdPipe('User')) params) {
+    // throws error 404 if not found
+    return await this.userService.unarchive(params.id);
   }
 }

@@ -17,8 +17,8 @@ export class ProductService extends BaseService<ProductEntity, ProductCreateDto,
     super(productRepository, request);
   }
 
-  //In case you want to override a method in the baseservice, this is how
-  //you proceed
+  //In case you want to override a method in the baseservice,
+  //this is how you proceed
   async create(dto: ProductCreateDto): Promise<ProductEntity> {
     const newProduct = Object.assign(new ProductEntity(), dto);
     newProduct.isDeleted = false;

@@ -123,13 +123,13 @@ export class UserService {
     }
   }
 
-  async createUser(dto: UserCreateDto): Promise<IUser> {
+  async create(dto: UserCreateDto): Promise<IUser> {
     const newUser = Object.assign(new UserEntity({}), dto);
     newUser.isDeleted = false;
     return await this.userRepository.save(newUser);
   }
 
-  async updateUser(toUpdate: UserEntity, dto: UserUpdateDto): Promise<IUser> {
+  async update(toUpdate: UserEntity, dto: UserUpdateDto): Promise<IUser> {
     toUpdate.userCreated = this.request.user._id;
     toUpdate.userUpdated = this.request.user._id;
     Object.assign(toUpdate, dto);
@@ -137,13 +137,21 @@ export class UserService {
     return this.populateUsers(await this.userRepository.save(toUpdate));
   }
 
-  async deleteUser(id: ObjectID): Promise<IUser> {
+  async archive(id: ObjectID): Promise<IUser> {
     // throws error 404 if not found
     const user = await findByField(this.userRepository, { id }, true);
-    if (!user.roles.includes('admin')) {
-      user.status = false;
-      user.isDeleted = false;
-    }
+    user.status = false;
+    user.isDeleted = true;
+
+    return await this.userRepository.save(user);
+  }
+
+  async unarchive(id: ObjectID): Promise<IUser> {
+    // throws error 404 if not found
+    const user = await findByField(this.userRepository, { id }, true);
+    user.status = true;
+    user.isDeleted = false;
+
     return await this.userRepository.save(user);
   }
 
@@ -196,7 +204,7 @@ export class UserService {
     if (!Array.isArray(tmp)) tmp = [tmp];
 
     for (const idx in tmp) {
-      const { userCreated, userUpdated, rdi, club } = tmp[idx];
+      const { userCreated, userUpdated } = tmp[idx];
 
       if (userCreated)
         tmp[idx].userCreated = await findByField(this.userRepository, { _id: userCreated?._id ?? userCreated });

@@ -4,9 +4,9 @@ import { throwError } from './throw-error.utils';
 /**
  * Check if the given field is unique
  * @param repository  corresponding entity repository
- * @param field object containing single field
+ * @param field object containing a single field
  * @example {_id : "645ead8b586d13a6932d46dd" }
- * {title : "some title to check if exisits"}
+ * {title : "some title to check if exists"}
 =
  * @returns boolean representing the uniqueness of the field
  */

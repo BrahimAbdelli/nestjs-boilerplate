@@ -101,14 +101,14 @@ export class UsersController {
 
   @Patch('archive/:id')
   //@Roles(adminRoles.admin)
-  async archive(@Param(new ValidateObjectIdPipe('User')) params) {
+  async archive(@Param(new ValidateObjectIdPipe('User')) params): Promise<IUser> {
     // throws error 404 if not found
     return await this.userService.archive(params.id);
   }
 
   @Patch('unarchive/:id')
   //@Roles(adminRoles.admin)
-  async unarchive(@Param(new ValidateObjectIdPipe('User')) params) {
+  async unarchive(@Param(new ValidateObjectIdPipe('User')) params): Promise<IUser> {
     // throws error 404 if not found
     return await this.userService.unarchive(params.id);
   }

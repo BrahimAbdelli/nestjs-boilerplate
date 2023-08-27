@@ -95,7 +95,7 @@ export class UserService {
       action_url,
       browser_name,
       reset_password,
-      support_email: 'brahimabdelli994@gmail.com'
+      support_email: process.env.SUPPORT_EMAIL
     });
     try {
       return await this.mailjet.post('send', { version: 'v3.1' }).request({

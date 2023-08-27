@@ -123,7 +123,7 @@ export abstract class BaseService<
       await this.repository.clear();
     } catch (error) {
       if (error.name === 'MongoError' && error.code === 26) {
-        // Handle "ns not found" error
+        // Handle "is not found" error
         // Perform alternative logic or error handling
         console.log('Collection does not exist. Unable to clear.');
       } else {

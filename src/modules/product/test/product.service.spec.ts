@@ -1,7 +1,7 @@
 import { REQUEST } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from "mongodb";
 import { ComparaisonTypeEnum, ComparatorEnum } from '../../../shared/search/search-dto';
 import { SearchResponse } from '../../../shared/search/search-response.dto';
 import { ProductEntity } from '../entities/product.entity';
@@ -23,7 +23,7 @@ const mockRequest = {
     token: 'mocktoken',
     username: 'mock',
     email: 'mock@mock.mock',
-    _id: new ObjectID('645c12b8515b06f417f8041a')
+    _id: new ObjectId('645c12b8515b06f417f8041a')
   }
 };
 const mockDate = new Date();
@@ -111,7 +111,7 @@ describe('Product Service', () => {
   describe('Delete Product', () => {
     it('Call delete repository to delete product and is successful', async () => {
       // Mock data
-      const mockId = new ObjectID();
+      const mockId = new ObjectId();
 
       // Mock repository methods
       const findByFieldSpy = jest.spyOn(findByField, 'findByField').mockResolvedValueOnce({});
@@ -136,7 +136,7 @@ describe('Product Service', () => {
   describe('Update Product', () => {
     it('should update an entity and return the updated entity', async () => {
       // Mock data
-      const mockId = new ObjectID();
+      const mockId = new ObjectId();
       const mockDto = { name: 'Updated Product', price: 10.99 };
       const mockEntity = new ProductEntity();
       mockEntity._id = mockId;
@@ -156,7 +156,7 @@ describe('Product Service', () => {
       // Expect repository methods to have been called with correct arguments
       expect(findByFieldMock).toHaveBeenCalledWith(productService.repository, { id: mockId }, true);
       expect(productService.repository.preload).toHaveBeenCalledWith({
-        _id: expect.any(ObjectID), // Expect an instance of ObjectID
+        _id: expect.any(ObjectId), // Expect an instance of ObjectId
         ...mockDto
       });
       expect(productService.repository.save).toHaveBeenCalledWith(mockUpdatedEntity);
@@ -167,7 +167,7 @@ describe('Product Service', () => {
   });
 
   describe('Updating status when the product exists', () => {
-    const productId = new ObjectID('5e2f63d67c06a754d05da4b6');
+    const productId = new ObjectId('5e2f63d67c06a754d05da4b6');
 
     beforeEach(() => {
       const mockProduct = new ProductEntity();
@@ -190,7 +190,7 @@ describe('Product Service', () => {
   });
 
   describe('Updating status when the product does not exist', () => {
-    const productId = new ObjectID('5e2f63d67c06a754d05da4b6');
+    const productId = new ObjectId('5e2f63d67c06a754d05da4b6');
 
     beforeEach(() => {
       jest.spyOn(productRepository, 'findOne').mockResolvedValue(null);

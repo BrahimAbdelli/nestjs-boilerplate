@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from "mongodb";
 import * as request from 'supertest';
 import { AppModule } from '../../../app.module';
 import { ComparaisonTypeEnum, ComparatorEnum } from '../../../shared/search/search-dto';
@@ -106,7 +106,7 @@ describe('ProductModule (e2e)', () => {
     }, 10000);
 
     it('should return 404 if product not found', async () => {
-      const nonExistentId = new ObjectID('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
+      const nonExistentId = new ObjectId('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
 
       return request(app.getHttpServer())
         .get(`/products/find/${nonExistentId}`)
@@ -171,7 +171,7 @@ describe('ProductModule (e2e)', () => {
     });
 
     it('should return 404 if product not found', () => {
-      const nonExistentId = new ObjectID('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
+      const nonExistentId = new ObjectId('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
       const updatedProduct = {
         name: 'Updated Product',
         price: 19.99,
@@ -207,7 +207,7 @@ describe('ProductModule (e2e)', () => {
     });
 
     it('should return 404 if product not found', () => {
-      const nonExistentId = new ObjectID('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
+      const nonExistentId = new ObjectId('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
 
       return request(app.getHttpServer())
         .patch(`/products/archive/${nonExistentId}`)
@@ -237,7 +237,7 @@ describe('ProductModule (e2e)', () => {
     });
 
     it('should return 404 if product not found', () => {
-      const nonExistentId = new ObjectID('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
+      const nonExistentId = new ObjectId('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
 
       return request(app.getHttpServer())
         .patch(`/products/unarchive/${nonExistentId}`)
@@ -317,7 +317,7 @@ describe('ProductModule (e2e)', () => {
     });
 
     it('should return 404 if product not found', () => {
-      const nonExistentId = new ObjectID('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
+      const nonExistentId = new ObjectId('645ead8b586d13a6932d46dd'); // Provide a non-existent product ID
 
       return request(app.getHttpServer())
         .delete(`/products/${nonExistentId}`)

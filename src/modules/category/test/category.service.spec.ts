@@ -1,7 +1,7 @@
 import { REQUEST } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from "mongodb";
 import { PaginationConstants } from '../../../shared/constants/pagination.enum';
 import { ComparaisonTypeEnum, ComparatorEnum } from '../../../shared/search/search-dto';
 import { SearchResponse } from '../../../shared/search/search-response.dto';
@@ -24,7 +24,7 @@ const mockRequest = {
     token: 'mocktoken',
     username: 'mock',
     email: 'mock@mock.mock',
-    _id: new ObjectID('645c12b8515b06f417f8041a')
+    _id: new ObjectId('645c12b8515b06f417f8041a')
   }
 };
 const mockDate = new Date();
@@ -106,7 +106,7 @@ describe('Category Service', () => {
   describe('Delete Category', () => {
     it('Call delete repository to delete category and is successful', async () => {
       // Mock data
-      const mockId = new ObjectID();
+      const mockId = new ObjectId();
 
       // Mock repository methods
       const findByFieldSpy = jest.spyOn(findByField, 'findByField').mockResolvedValueOnce({});
@@ -131,7 +131,7 @@ describe('Category Service', () => {
   describe('Update Category', () => {
     it('should update an entity and return the updated entity', async () => {
       // Mock data
-      const mockId = new ObjectID();
+      const mockId = new ObjectId();
       const mockDto = { name: 'Updated Category', price: 10.99 };
       const mockEntity = new CategoryEntity();
       mockEntity._id = mockId;
@@ -161,7 +161,7 @@ describe('Category Service', () => {
   });
 
   describe('Updating status when the category exists', () => {
-    const categoryId = new ObjectID('5e2f63d67c06a754d05da4b6');
+    const categoryId = new ObjectId('5e2f63d67c06a754d05da4b6');
 
     beforeEach(() => {
       const mockCategory = new CategoryEntity();
@@ -184,7 +184,7 @@ describe('Category Service', () => {
   });
 
   describe('Updating status when the category does not exist', () => {
-    const categoryId = new ObjectID('5e2f63d67c06a754d05da4b6');
+    const categoryId = new ObjectId('5e2f63d67c06a754d05da4b6');
 
     beforeEach(() => {
       jest.spyOn(categoryRepository, 'findOne').mockResolvedValue(null);

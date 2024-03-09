@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export abstract class BaseUpdateDto {
   @ApiProperty()
-  private _id?: ObjectID;
+  private _id?: ObjectId;
 }

@@ -1,7 +1,7 @@
-import { ObjectID } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export interface IUser {
-  _id: ObjectID;
+  _id: ObjectId;
   username: string;
   email: string;
   roles: string[];

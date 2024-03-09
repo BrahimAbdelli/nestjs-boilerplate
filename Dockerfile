@@ -1,26 +1,29 @@
-# Base image
-FROM node:14-alpine
+FROM node:alpine AS development
 
-# Set the working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+RUN npm install
 
-# Copy the rest of the application code
+COPY . . 
+
+RUN npm run build
+
+FROM node:alpine as production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --omit=dev
+
 COPY . .
 
-# Set environment variables (if necessary)
-# ENV PORT=3000
+COPY --from=development /usr/src/app/dist ./dist
 
-# Expose the port (if necessary)
-# EXPOSE 3000
+CMD ["node", "dist/main"]
 
-# Run the tests
-# RUN npm test
-
-# Start the application
-CMD [ "npm", "start" ]

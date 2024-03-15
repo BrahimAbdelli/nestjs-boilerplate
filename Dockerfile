@@ -25,5 +25,8 @@ COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
+# Expose port 80
+EXPOSE 80
+
 CMD ["node", "dist/main"]
 

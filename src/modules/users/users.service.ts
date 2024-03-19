@@ -6,13 +6,14 @@ import * as fs from 'fs';
 import { compile } from 'handlebars';
 import * as jwt from 'jsonwebtoken';
 import { Email, connect } from 'node-mailjet';
-import { ObjectID, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { findByField } from '../../shared/utils/find-by-field.utils';
 import { throwError } from '../../shared/utils/throw-error.utils';
 import { IGetUserAuthInfoRequest } from './../../shared/user-request.interface';
 import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
 import { IUser } from './interface/user.interface';
+import { ObjectId } from 'mongodb';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -137,7 +138,7 @@ export class UserService {
     return this.populateUsers(await this.userRepository.save(toUpdate));
   }
 
-  async archive(id: ObjectID): Promise<IUser> {
+  async archive(id: ObjectId): Promise<IUser> {
     // throws error 404 if not found
     const user = await findByField(this.userRepository, { id }, true);
     user.status = false;
@@ -146,7 +147,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async unarchive(id: ObjectID): Promise<IUser> {
+  async unarchive(id: ObjectId): Promise<IUser> {
     // throws error 404 if not found
     const user = await findByField(this.userRepository, { id }, true);
     user.status = true;

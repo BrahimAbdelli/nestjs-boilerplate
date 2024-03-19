@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
-import { BeforeInsert, BeforeUpdate, Column, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, ObjectId, ObjectIdColumn } from 'typeorm';
 import { IUser } from '../../modules/users/interface/user.interface';
 import { transformEntity } from '../utils/transform-entity.utlis';
 
@@ -9,7 +9,7 @@ export abstract class BaseEntity {
   @ObjectIdColumn()
   @Transform(transformEntity)
   @Expose()
-  public _id: ObjectID;
+  public _id: ObjectId;
 
   @Column()
   @Expose()
@@ -17,7 +17,7 @@ export abstract class BaseEntity {
 
   @Column()
   @Transform(transformEntity)
-  public userCreated: ObjectID | IUser;
+  public userCreated: ObjectId | IUser;
 
   @Column()
   @Expose()
@@ -25,7 +25,7 @@ export abstract class BaseEntity {
 
   @Column()
   @Transform(transformEntity)
-  public userUpdated: ObjectID | IUser;
+  public userUpdated: ObjectId | IUser;
 
   @Column()
   @Expose()

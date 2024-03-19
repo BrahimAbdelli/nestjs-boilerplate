@@ -8,7 +8,7 @@ import { prodConfig } from './config/prod.config';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
 import { UsersModule } from './modules/users/users.module';
-import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
+import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
 
 @Module({
   imports: [
@@ -46,9 +46,13 @@ import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
   ],
   controllers: [],
   providers: []
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor
+    }
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+    //consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

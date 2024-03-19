@@ -36,3 +36,5 @@ lerna-debug.log*
 
 # code testing coverage
 documentation
+
+/data

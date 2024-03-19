@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   backend:
-    container_name: nestjs-boilerplate
+    container_name: backend
     image: nestjs-boilerplate:1.0.1
     build:
       context: .
@@ -9,7 +9,7 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:debug
     ports:
-      - 80:80
+      - 3000:3000
       - 9229:9229
     networks:
       - server-network

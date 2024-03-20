@@ -283,10 +283,8 @@ describe('ProductModule (e2e)', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect(response => {
-          //console.log("this is it ");
-          //console.log(response.body);
-          expect(response).toHaveProperty('body');
-          //expect(response.body).toHaveProperty('count');
+          expect(response.body).toHaveProperty('data');
+          expect(response.body).toHaveProperty('count');
         })
         .end(err => {
           if (err) return done(err);

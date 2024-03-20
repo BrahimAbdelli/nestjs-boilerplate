@@ -1,7 +1,7 @@
 import { REQUEST } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ObjectId } from "mongodb";
+import { ObjectId } from 'mongodb';
 import { ComparaisonTypeEnum, ComparatorEnum } from '../../../shared/search/search-dto';
 import { SearchResponse } from '../../../shared/search/search-response.dto';
 import { ProductEntity } from '../entities/product.entity';
@@ -257,7 +257,6 @@ describe('Product Service', () => {
         { id: 2, name: 'Product 2' }
       ];
       const mockTotal = 2;
-      const mockCondition = { isDeleted: false };
       const mockTake = PaginationConstants.DEFAULT_TAKE;
       const mockSkip = PaginationConstants.DEFAULT_SKIP;
 
@@ -265,11 +264,13 @@ describe('Product Service', () => {
       productService.repository.findAndCount.mockResolvedValueOnce([mockResults, mockTotal]);
 
       // Call service method
-      const result = await productService.paginate(mockTake, mockSkip, mockCondition);
+      const result = await productService.paginate(mockTake, mockSkip);
 
       // Expect repository method to have been called with correct arguments
       expect(productService.repository.findAndCount).toHaveBeenCalledWith({
-        where: mockCondition,
+        where: {
+          isDeleted: false
+        },
         take: mockTake,
         skip: mockSkip
       });
@@ -285,20 +286,20 @@ describe('Product Service', () => {
       // Mock data
       const mockResults = [{ id: 1, name: 'Product 1' }];
       const mockTotal = 1;
-      const mockCondition = { isDeleted: false };
       const mockTake = 5;
       const mockSkip = 10;
-      const mockType = 'type1';
 
       // Mock repository method
       productService.repository.findAndCount.mockResolvedValueOnce([mockResults, mockTotal]);
 
       // Call service method
-      const result = await productService.paginate(mockTake, mockSkip, mockCondition, mockType);
+      const result = await productService.paginate(mockTake, mockSkip);
 
       // Expect repository method to have been called with correct arguments
       expect(productService.repository.findAndCount).toHaveBeenCalledWith({
-        where: { ...mockCondition, ...{ type: mockType } },
+        where: {
+          isDeleted: false
+        },
         take: mockTake,
         skip: mockSkip
       });

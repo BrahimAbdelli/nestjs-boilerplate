@@ -251,52 +251,53 @@ describe('Category Service', () => {
         { id: 2, name: 'Category 2' }
       ];
       const mockTotal = 2;
-      const mockCondition = { isDeleted: false };
       const mockTake = PaginationConstants.DEFAULT_TAKE;
       const mockSkip = PaginationConstants.DEFAULT_SKIP;
-
+  
       // Mock repository method
       categoryService.repository.findAndCount.mockResolvedValueOnce([mockResults, mockTotal]);
-
+  
       // Call service method
-      const result = await categoryService.paginate(mockTake, mockSkip, mockCondition);
-
+      const result = await categoryService.paginate(mockTake, mockSkip);
+  
       // Expect repository method to have been called with correct arguments
       expect(categoryService.repository.findAndCount).toHaveBeenCalledWith({
-        where: mockCondition,
+        where: {
+          isDeleted: false
+        },
         take: mockTake,
         skip: mockSkip
       });
-
+  
       // Expect service method to return correct result
       expect(result).toEqual({
         data: mockResults,
         count: mockTotal
       });
     });
-
+  
     it('should paginate results with custom values', async () => {
       // Mock data
       const mockResults = [{ id: 1, name: 'Category 1' }];
       const mockTotal = 1;
-      const mockCondition = { isDeleted: false };
       const mockTake = 5;
       const mockSkip = 10;
-      const mockType = 'type1';
-
+  
       // Mock repository method
       categoryService.repository.findAndCount.mockResolvedValueOnce([mockResults, mockTotal]);
-
+  
       // Call service method
-      const result = await categoryService.paginate(mockTake, mockSkip, mockCondition, mockType);
-
+      const result = await categoryService.paginate(mockTake, mockSkip);
+  
       // Expect repository method to have been called with correct arguments
       expect(categoryService.repository.findAndCount).toHaveBeenCalledWith({
-        where: { ...mockCondition, ...{ type: mockType } },
+        where: {
+          isDeleted: false
+        },
         take: mockTake,
         skip: mockSkip
       });
-
+  
       // Expect service method to return correct result
       expect(result).toEqual({
         data: mockResults,

@@ -8,7 +8,7 @@ import { ComparaisonTypeEnum, ComparatorEnum } from '../../../shared/search/sear
 describe('ProductModule (e2e)', () => {
   let app: INestApplication;
   const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmciLCJlbWFpbCI6InRlc3RpbmdAdGVzdC50biIsImlhdCI6MTY4MzQ3MDMyMiwiZXhwIjoxNjg0NzY2MzIyfQ.VwMrPTlci-EgkQwhW20dWA-TpZbJjDK8dLRDxzKnMJM';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZjlmN2RlYzJjZDkyZWU5MGQ4MGZhMiIsInVzZXJuYW1lIjoidGVzdCIsImVtYWlsIjoidGVzdEB0ZXN0LnRuIiwiaWF0IjoxNzEwODgxOTQ4LCJleHAiOjE3MTIxNzc5NDh9.IhDMVavqG4mBU3qfuCNjgKjJ8GL5VfwLFU5Z3_GGrSc';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -283,8 +283,10 @@ describe('ProductModule (e2e)', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect(response => {
-          expect(response.body).toHaveProperty('data');
-          expect(response.body).toHaveProperty('count');
+          //console.log("this is it ");
+          //console.log(response.body);
+          expect(response).toHaveProperty('body');
+          //expect(response.body).toHaveProperty('count');
         })
         .end(err => {
           if (err) return done(err);

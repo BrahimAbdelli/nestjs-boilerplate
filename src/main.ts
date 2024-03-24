@@ -20,7 +20,7 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Nestjs Boilerplate')
     .setDescription('This is a project aimed to be a nestjs boilerplate')
-    .setVersion('1.0')
+    .setVersion('1.0.1')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document);

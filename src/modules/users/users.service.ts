@@ -1,7 +1,6 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as crypto from 'crypto';
 import * as fs from 'fs';
 import { compile } from 'handlebars';
 import * as jwt from 'jsonwebtoken';
@@ -14,6 +13,7 @@ import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from
 import { UserEntity } from './entities/user.entity';
 import { IUser } from './interface/user.interface';
 import { ObjectId } from 'mongodb';
+import { createHmac } from 'node:crypto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -33,7 +33,7 @@ export class UserService {
   async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const findOneOptions = {
       email: loginUserDto.email,
-      password: crypto.createHmac('sha256', loginUserDto.password).digest('hex'),
+      password: createHmac('sha256', loginUserDto.password).digest('hex'),
       status: true,
       isDeleted: false
     };

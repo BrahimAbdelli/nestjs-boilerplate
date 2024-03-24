@@ -7,6 +7,7 @@ import { ValidateObjectIdPipe } from './../pipes/validate-object-id.pipe';
 import { BaseEntity } from './base.entity';
 import { IBaseController } from './interfaces/base-controller.interface';
 import { IBaseService } from './interfaces/base-service.interface';
+import { ResponsePaginate } from '../types/ResponsePaginate';
 
 export function BaseController<T extends BaseEntity, createDto, updateDto>(
   createDto: Type<createDto>,
@@ -27,6 +28,10 @@ export function BaseController<T extends BaseEntity, createDto, updateDto>(
 
     @Get('paginate')
     async paginate(@Query('take') take, @Query('skip') skip): Promise<T[]> {
+    @ApiQuery({ allowEmptyValue: true, name: 'take' })
+    @ApiQuery({ allowEmptyValue: true, name: 'skip' })
+    @ApiResponse({ description: 'returns results of pagination' })
+    async paginate(@Query('take') take, @Query('skip') skip): Promise<ResponsePaginate<T>> {
       return this.service.paginate(+take, +skip);
     }
 

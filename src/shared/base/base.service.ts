@@ -5,6 +5,7 @@ import { FindConditions, FindManyOptions, Repository } from 'typeorm';
 import { PaginationConstants } from '../constants';
 import { ComparaisonTypeEnum, ComparatorEnum, QueryDto } from '../search/search-dto';
 import { SearchResponse } from '../search/search-response.dto';
+import { ResponsePaginate } from '../types/ResponsePaginate';
 import { IGetUserAuthInfoRequest } from '../user-request.interface';
 import { findByField } from '../utils/find-by-field.utils';
 import { BaseEntity } from './base.entity';
@@ -28,20 +29,20 @@ export abstract class BaseService<
     return this.repository.find({ where });
   }
 
-  async paginate(take, skip, condition = { isDeleted: false }, type?): Promise<any> {
-    const queryTake = Number(take) || PaginationConstants.DEFAULT_TAKE;
-    const querySkip = Number(skip) || PaginationConstants.DEFAULT_SKIP;
-
-    let where = { ...condition };
-    if (type) {
-      where = { ...condition, ...{ type } };
-    }
-    const [result, total] = await this.repository.findAndCount({
-      where,
-      //order: { createdAt: -1 },
+  async paginate(take, skip): Promise<ResponsePaginate<T>> {
+    const queryTake = +take || PaginationConstants.DEFAULT_TAKE;
+    const querySkip = +skip || PaginationConstants.DEFAULT_SKIP;
+    const findOptions: FindManyOptions<T> = {
+      where: {
+        isDeleted: false
+      } as unknown as FindManyOptions<T>,
       take: queryTake,
-      skip: querySkip
-    });
+      skip: querySkip,
+      //order: { createdAt: -1 },
+      ...(take || skip || {})
+    };
+
+    const [result, total] = await this.repository.findAndCount(findOptions);
     return {
       data: result,
       count: total

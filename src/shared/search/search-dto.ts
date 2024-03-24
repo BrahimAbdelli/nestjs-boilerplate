@@ -12,7 +12,7 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator';
-import { EntityFieldsNames } from 'typeorm/common/EntityFieldsNames';
+import { EntityFieldsNames } from '../types/EntityFieldsNames';
 
 export enum ComparatorEnum {
   LIKE = 'LIKE',

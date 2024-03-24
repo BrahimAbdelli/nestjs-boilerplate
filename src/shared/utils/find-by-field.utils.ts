@@ -1,5 +1,5 @@
-import { ObjectID } from 'mongodb';
-import { Repository } from 'typeorm';
+import { ObjectId } from 'mongodb';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { throwError } from './throw-error.utils';
 /**
  * Find entity with matched field
@@ -23,15 +23,15 @@ export async function findByField<T>(
   const fieldKey: string = Object.keys(field)[0];
   const fieldValue: any = Object.values(field)[0];
 
-  let entity: T = null;
+  let entity: any;
 
   if (!fieldKey || !fieldValue) return entity;
 
   if (['_id', 'id'].includes(fieldKey)) {
-    const id = new ObjectID(fieldValue);
-    entity = await repository.findOne(id.toHexString());
+    const id = new ObjectId(fieldValue);
+    entity = await repository.findOne(id.toHexString() as any);
   } else {
-    const condition = { [fieldKey]: new RegExp(`^${fieldValue}$`, insensitive ? 'i' : undefined) };
+    const condition = { [fieldKey]: new RegExp(`^${fieldValue}$`, insensitive ? 'i' : undefined) } as FindOptionsWhere<T>;
     entity = await repository.findOne({ where: condition });
   }
 

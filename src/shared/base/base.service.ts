@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { ObjectID } from 'mongodb';
-import { FindConditions, FindManyOptions, Repository } from 'typeorm';
+import { ObjectId } from 'mongodb';
+import { FindManyOptions, FindOptionsOrder, Repository } from 'typeorm';
 import { PaginationConstants } from '../constants';
 import { ComparaisonTypeEnum, ComparatorEnum, QueryDto } from '../search/search-dto';
 import { SearchResponse } from '../search/search-response.dto';
@@ -24,9 +24,8 @@ export abstract class BaseService<
     @Inject(REQUEST) public readonly request: IGetUserAuthInfoRequest
   ) {}
 
-  async findAll(condition = { isDeleted: false }): Promise<T[]> {
-    const where: FindConditions<T> = { ...condition };
-    return this.repository.find({ where });
+  async findAll(): Promise<T[]> {
+    return this.repository.find({ where: { isDeleted: false } as FindManyOptions<T>['where'] });
   }
 
   async paginate(take, skip): Promise<ResponsePaginate<T>> {
@@ -49,7 +48,7 @@ export abstract class BaseService<
     };
   }
 
-  async findOne(_id: ObjectID): Promise<T> {
+  async findOne(_id: ObjectId): Promise<T> {
     // throws error 404 if not found
     const entity = await findByField(this.repository, { id: _id }, true);
     return await this.populate(entity);
@@ -83,7 +82,7 @@ export abstract class BaseService<
    * @param dto : the DTO to be assigned for the entity
    * @returns : The modified entity
    */
-  async update(_id: ObjectID, dto: updateDto): Promise<T> {
+  async update(_id: ObjectId, dto: updateDto): Promise<T> {
     let newEntity = this.createObject(dto);
     if (this.request.user) {
       newEntity.userUpdated = this.request.user._id;
@@ -96,17 +95,17 @@ export abstract class BaseService<
     return this.repository.save(newEntity as any);
   }
 
-  async delete(_id: ObjectID): Promise<void> {
+  async delete(_id: ObjectId): Promise<void> {
     await findByField(this.repository, { _id }, true);
     await this.repository.delete(_id);
   }
 
   /**
    *
-   * @param _id : ObjectID of the given entity
+   * @param _id : ObjectId of the given entity
    * This method applies logical deletion or restoration from the database by setting the isDeleted to true or false
    */
-  async updateStatus(_id: ObjectID, isDeleted: boolean): Promise<T> {
+  async updateStatus(_id: ObjectId, isDeleted: boolean): Promise<T> {
     let entity = {} as T;
     entity = await findByField(this.repository, { _id }, true);
     entity.isDeleted = isDeleted;
@@ -150,10 +149,10 @@ export abstract class BaseService<
       };
     });
     query.where =
-      data.type.toUpperCase() === ComparaisonTypeEnum.AND ? { $and: filterCriteria } : { $or: filterCriteria };
+      data.type.toUpperCase() === ComparaisonTypeEnum.AND ? { $and: filterCriteria } : ({ $or: filterCriteria } as any);
     const [result, total] = await this.repository.findAndCount({
       where: query.where,
-      order: data.orders,
+      order: data.orders as FindOptionsOrder<T>,
       ...(data.isPaginable == true || data.isPaginable == undefined
         ? {
             take: queryTake,

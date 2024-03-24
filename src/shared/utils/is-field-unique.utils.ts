@@ -1,4 +1,4 @@
-import { ObjectLiteral, Repository } from 'typeorm';
+import { FindOptionsWhere, ObjectLiteral, Repository } from 'typeorm';
 import { throwError } from './throw-error.utils';
 
 /**
@@ -15,7 +15,7 @@ export async function isFieldUnique<T>(repository: Repository<T>, field: object,
   const fieldKey: string = Object.keys(field)[0];
   const fieldValue: any = Object.values(field)[0];
 
-  const condition = { [fieldKey]: new RegExp(`^${fieldValue}$`, 'i') };
+  const condition = { [fieldKey]: new RegExp(`^${fieldValue}$`, 'i') } as FindOptionsWhere<T>;
   const entity: ObjectLiteral = await repository.findOne({ where: condition });
 
   let isUnique = false;

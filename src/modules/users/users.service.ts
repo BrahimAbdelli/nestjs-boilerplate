@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { compile } from 'handlebars';
 import * as jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
 import { Email, connect } from 'node-mailjet';
 import { Repository } from 'typeorm';
 import { findByField } from '../../shared/utils/find-by-field.utils';
@@ -12,7 +13,6 @@ import { IGetUserAuthInfoRequest } from './../../shared/user-request.interface';
 import { LoginUserDto, UpdateNewPasswordDto, UserCreateDto, UserUpdateDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
 import { IUser } from './interface/user.interface';
-import { ObjectId } from 'mongodb';
 import { createHmac } from 'node:crypto';
 
 @Injectable({ scope: Scope.REQUEST })
@@ -26,7 +26,8 @@ export class UserService {
   }
 
   async findAll(): Promise<UserEntity[]> {
-    const users = await this.userRepository.find({ status: true, isDeleted: false });
+    const conditions = { status: true, isDeleted: false };
+    const users = await this.userRepository.find({ where: conditions });
     return await this.populateUsers(users);
   }
 
@@ -38,7 +39,7 @@ export class UserService {
       isDeleted: false
     };
 
-    let authUser = await this.userRepository.findOne(findOneOptions);
+    let authUser = await this.userRepository.findOne({ where: findOneOptions });
     if (!authUser) throwError({ User: 'Not found' }, 'Authentication failed', 401);
 
     // if logged delete reset password token
@@ -169,10 +170,10 @@ export class UserService {
     return this.populateUsers(user);
   }
 
-  generateJWT(user) {
+  generateJWT(user: UserEntity) {
     return jwt.sign(
       {
-        id: user.id,
+        id: user._id,
         username: user.username,
         email: user.email,
         roles: user.roles
@@ -182,7 +183,7 @@ export class UserService {
     );
   }
 
-  generateResetPasswordJWT(user) {
+  generateResetPasswordJWT(user: UserEntity) {
     return jwt.sign(
       {
         email: user.email,

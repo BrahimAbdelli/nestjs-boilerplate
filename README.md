@@ -16,7 +16,7 @@ This is a NestJS boilerplate.
 The github repository : [Github repository](https://github.com/BrahimAbdelli/nestjs-boilerplate).
 
 And you can find every detail about it here :
-[Article](https://brahimabdelli.com/nestjs-boilerplate).
+[Article](https://brahimabdelli.dev/nestjs-boilerplate).
 
 ## Installation
 
@@ -100,7 +100,7 @@ Here a picture that explains the concept a little bit more :
 <img alt="image" src="https://github.com/BrahimAbdelli/nestjs-boilerplate/blob/ff5002585763e1e0bf9a3d4f9b7b4f000d32320d/public/Abstraction2.png?raw=true">
 
 Below is the part in the article where you can find more infos.
-[More here](https://www.brahimabdelli.com/nestjs-boilerplate#Section%202%3A%20Implementation)
+[More here](https://www.brahimabdelli.dev/nestjs-boilerplate#Section%202%3A%20Implementation)
 
 ### Base Module APIs APIs
 
@@ -108,11 +108,11 @@ Here we will be using basecontroller apis, implementend in the category and prod
 
 Here you can read more about the controller APIs.
 
-[More here about controller APIs](https://www.brahimabdelli.com/nestjs-boilerplate#Part%203%20-%20Explaining%20the%20base%20controller.)
+[More here about controller APIs](https://www.brahimabdelli.dev/nestjs-boilerplate#Part%203%20-%20Explaining%20the%20base%20controller.)
 
 And here you can learn more about the written service methods.
 
-[More about service methods](https://www.brahimabdelli.com/nestjs-boilerplate#Part%204%20-%20Explaining%20the%20base%20service.)
+[More about service methods](https://www.brahimabdelli.dev/nestjs-boilerplate#Part%204%20-%20Explaining%20the%20base%20service.)
 
 ### Create
 
@@ -417,7 +417,7 @@ This module does not implement the abstraction module.
 
 Here you can read more about the users module
 
-[More here User Module](https://www.brahimabdelli.com/nestjs-boilerplate#Part%203%20-%20Creating%20our%20Users%20Module.)
+[More here User Module](https://www.brahimabdelli.dev/nestjs-boilerplate#Part%203%20-%20Creating%20our%20Users%20Module.)
 
 ### Signup
 
